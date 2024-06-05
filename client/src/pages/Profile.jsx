@@ -116,8 +116,6 @@ export default function Profile() {
     }
   }
 
-
-
   const handleSignOut = async () => {
     try {
       dispatch(signOutStart());
@@ -148,6 +146,21 @@ export default function Profile() {
       setShowListingsError(true);
     }
   };
+  
+  const handleListingDelete = async (listingID)=>{
+    try{
+      const res= await fetch(`/api/listing/delete/${listingID}`,{method: 'DELETE'});
+      const data= await res.json();
+      if(data.success=== false){
+        console.log(data.message);
+        return;
+      }
+      setUserListings((prev)=> prev.filter((listing) => listing._id !==listingID));
+    }
+    catch(err){
+      console.log(err.message)
+    }
+  }
 
 
   return (
@@ -237,7 +250,7 @@ export default function Profile() {
               </Link>
 
               <div className='flex flex-col item-center'>
-                <button className='text-red-700 uppercase'>Delete</button>
+                <button onClick={()=>handleListingDelete(listing._id)} className='text-red-700 uppercase'>Delete</button>
                 <button className='text-green-700 uppercase'>Edit</button>
               </div>
             </div>
